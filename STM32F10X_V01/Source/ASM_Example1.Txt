@@ -1,0 +1,4 @@
+  register UINT32 R0 __asm("r0");
+  register UINT32 R1 __asm("r1");
+  __asm("  MRS     R0,MSP");
+  __asm("  STR R1,[R0,#0x000E]");
