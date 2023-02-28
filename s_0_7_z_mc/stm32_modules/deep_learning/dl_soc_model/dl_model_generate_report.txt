@@ -1,0 +1,128 @@
+Neural Network Tools for STM32AI v1.4.1 (STM.ai v6.0.0-RC6)
+Created date       : 2021-04-21 11:31:25
+Parameters         : generate --name dl_model -m E:/02 Program/DL/model/0420-GFM300-GRU-30steps.h5 --type keras --compression 1 --verbosity 1 --workspace C:\Users\wenwu\AppData\Local\Temp\mxAI_workspace105090678815004155500890393537358 --output C:\Users\wenwu\.stm32cubemx
+
+Exec/report summary (generate)
+------------------------------------------------------------------------------------------------------------------------
+model file         : E:\02 Program\DL\model\0420-GFM300-GRU-30steps.h5
+type               : keras
+c_name             : dl_model
+compression        : None
+quantize           : None
+workspace dir      : C:\Users\wenwu\AppData\Local\Temp\mxAI_workspace105090678815004155500890393537358
+output dir         : C:\Users\wenwu\.stm32cubemx
+
+model_name         : GFM300GRU30steps
+model_hash         : 7a6b95c896d408fe543c56c73a45d52d
+input              : input_0 [60 items, 240 B, ai_float, FLOAT32, (30, 1, 2)]
+inputs (total)     : 240 B
+output             : dense_1 [1 items, 4 B, ai_float, FLOAT32, (1, 1, 1)]
+outputs (total)    : 4 B
+params #           : 12,501 items (48.83 KiB)
+macc               : 78,811
+weights (ro)       : 50,004 B (48.83 KiB) 
+activations (rw)   : 1,880 B (1.84 KiB) 
+ram (total)        : 2,124 B (2.07 KiB) = 1,880 + 240 + 4
+
+Model name - GFM300GRU30steps ['input_0'] ['dense_1']
+------------------------------------------------------------------------------------------------------------------------------------------------
+id   layer (type)                 shape          param/size      macc     connected to      |   c_size   c_macc           c_type               
+------------------------------------------------------------------------------------------------------------------------------------------------
+0    input_0 (Input)              (h:30, c:2)                                               |                            
+     conv1d_1 (Conv2D)            (h:27, c:20)   180/720         4,340    input_0           |            +1,080(+24.9%)   optimized_conv2d()[0]
+     conv1d_1_nl (Nonlinearity)   (h:27, c:20)                   540      conv1d_1          |            -540(-100.0%)   
+------------------------------------------------------------------------------------------------------------------------------------------------
+1    max_pooling1d_1 (Pool)       (h:9, c:20)                    540      conv1d_1_nl       |            -540(-100.0%)   
+------------------------------------------------------------------------------------------------------------------------------------------------
+2    conv1d_2 (Conv2D)            (h:6, c:20)    1,620/6,480     9,620    max_pooling1d_1   |            +120(+1.2%)      conv2d()[1]          
+     conv1d_2_nl (Nonlinearity)   (h:6, c:20)                    120      conv1d_2          |            -120(-100.0%)   
+------------------------------------------------------------------------------------------------------------------------------------------------
+3    gru_1 (GRU)                  (c:50)         10,650/42,600   63,600   conv1d_2_nl       |                             gru()[2]             
+------------------------------------------------------------------------------------------------------------------------------------------------
+4    dense_1 (Dense)              (c:1)          51/204          51       gru_1             |                             dense()/o[3]         
+------------------------------------------------------------------------------------------------------------------------------------------------
+model/c-model: macc=78,811/78,811  weights=50,004/50,004  activations=--/1,880 io=--/244
+
+
+Generated C-graph summary
+------------------------------------------------------------------------------------------------------------------------
+model name         : gfm300gru30steps
+c-name             : dl_model
+c-node #           : 4
+c-array #          : 16
+activations size   : 1880
+weights size       : 50004
+macc               : 78811
+inputs             : ['input_0_output_array']
+outputs            : ['dense_1_output_array']
+
+
+C-Arrays (16)
+------------------------------------------------------------------------------------------------------------------------
+c_id  name (*_array)     item/size           mem-pool     c-type       fmt    comment            
+------------------------------------------------------------------------------------------------------------------------
+0     input_0_output     60/240              user         float        float  /input             
+1     conv1d_1_output    180/720             activations  float        float                     
+2     conv1d_2_output    120/480             activations  float        float                     
+3     gru_1_output       50/200              activations  float        float                     
+4     dense_1_output     1/4                 user         float        float  /output            
+5     conv1d_1_weights   160/640             weights      const float  float                     
+6     conv1d_1_bias      20/80               weights      const float  float                     
+7     conv1d_2_weights   1600/6400           weights      const float  float                     
+8     conv1d_2_bias      20/80               weights      const float  float                     
+9     gru_1_kernel       3000/12000          weights      const float  float                     
+10    gru_1_recurrent    7500/30000          weights      const float  float                     
+11    gru_1_bias         150/600             weights      const float  float                     
+12    dense_1_weights    50/200              weights      const float  float                     
+13    dense_1_bias       1/4                 weights      const float  float                     
+14    conv1d_1_scratch0  60/240              activations  float        float                     
+15    gru_1_scratch0     300/1200            activations  float        float                     
+------------------------------------------------------------------------------------------------------------------------
+
+
+C-Layers (4)
+------------------------------------------------------------------------------------------------------------------------
+c_id  name (*_layer)  id  layer_type        macc        rom         tensors               shape (array id)                       
+------------------------------------------------------------------------------------------------------------------------
+0     conv1d_1        1   optimized_conv2d  5420        720         I: input_0_output     [1, 30, 1, 2] (0)                      
+                                                                    S: conv1d_1_scratch0                                         
+                                                                    W: conv1d_1_weights                                          
+                                                                    W: conv1d_1_bias                                             
+                                                                    O: conv1d_1_output    [1, 9, 1, 20] (1)                      
+------------------------------------------------------------------------------------------------------------------------
+1     conv1d_2        2   conv2d            9740        6480        I: conv1d_1_output    [1, 9, 1, 20] (1)                      
+                                                                    W: conv1d_2_weights                                          
+                                                                    W: conv1d_2_bias                                             
+                                                                    O: conv1d_2_output    [1, 6, 1, 20] (2)                      
+------------------------------------------------------------------------------------------------------------------------
+2     gru_1           3   gru               63600       42600       I: conv1d_2_output    [1, 6, 1, 20] (2)                      
+                                                                    S: gru_1_scratch0                                            
+                                                                    W: gru_1_kernel                                              
+                                                                    W: gru_1_recurrent                                           
+                                                                    W: gru_1_bias                                                
+                                                                    O: gru_1_output       [1, 1, 1, 50] (3)                      
+------------------------------------------------------------------------------------------------------------------------
+3     dense_1         4   dense             51          204         I: gru_1_output       [1, 1, 1, 50] (3)                      
+                                                                    W: dense_1_weights                                           
+                                                                    W: dense_1_bias                                              
+                                                                    O: dense_1_output     [1, 1, 1, 1] (4)                       
+------------------------------------------------------------------------------------------------------------------------
+
+
+
+Complexity report per layer - macc=78,811 weights=50,004 act=1,880 ram_io=244
+-------------------------------------------------------------------------
+id   name       c_macc                    c_rom                     c_id
+-------------------------------------------------------------------------
+0    conv1d_1   ||                 6.9%   |                  1.4%   [0] 
+2    conv1d_2   |||               12.4%   |||               13.0%   [1] 
+3    gru_1      ||||||||||||||||  80.7%   ||||||||||||||||  85.2%   [2] 
+4    dense_1    |                  0.1%   |                  0.4%   [3] 
+
+Generated files (5)
+------------------------------------------------------------------------------------------------------------------------
+C:\Users\wenwu\.stm32cubemx\dl_model_config.h
+C:\Users\wenwu\.stm32cubemx\dl_model.h
+C:\Users\wenwu\.stm32cubemx\dl_model.c
+C:\Users\wenwu\.stm32cubemx\dl_model_data.h
+C:\Users\wenwu\.stm32cubemx\dl_model_data.c
